@@ -10,11 +10,6 @@ To install config files:
 stow -vt ~ <PACKAGE>
 ```
 
-To install config files, forcing overwrites (example of zsh flavours):
-```sh
-stow --override=.zshrc -vt ~ zsh.<flavour>
-```
-
 To uninstall config files:
 ```sh
 stow -vDt ~ <PACKAGE>
