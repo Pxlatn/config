@@ -1,0 +1,4 @@
+vim/.vim/backup/*.swp
+vim/.vim/colors/*.vim
+vim/.vim/spell/*.spl
+vim/.vim/spell/*.sug

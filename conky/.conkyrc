@@ -1,0 +1,89 @@
+own_window yes
+own_window_hints undecorated,below,skip_taskbar
+own_window_type override
+background no	#yes once not in loop
+double_buffer yes
+
+use_xft yes
+
+update_interval 1
+
+use_spacer left
+
+alignment top_right
+minimum_size 150 5
+gap_x 10
+gap_y 35
+
+own_window_colour white
+own_window_transparent no
+
+override_utf8_locale no
+#xftfont Terminus:size=8
+xftfont Monospace:size=8
+xftalpha 1
+
+short_units true
+
+uppercase no
+draw_shades no
+draw_outline yes
+draw_borders no
+
+default_color black
+default_shade_color black
+default_outline_color white
+
+color0 000000
+color1 0000ff
+color2 ff7700
+
+# stuff after 'TEXT' will be formatted on screen
+
+#${color1}Date:${alignr}${color0}${time %a, %d %B %G}
+#${color1}Time (${time %Z}):${alignr}${color0}${time %H:%M:%S}
+
+TEXT
+${color1}CPU:${color0} $cpu%${alignr}${color1}Temp:${color0} ${hwmon temp 2}${iconv_start UTF-8 ISO_8859-1}°${iconv_stop}C
+${cpugraph 20,150 000000 00ffff 100 -t}
+${color1}RAM:  ${color0}$memperc%$alignr$mem/$memmax
+${membar 3,150}
+${color1}SWAP: ${color0}$swapperc%$alignr$swap/$swapmax
+${swapbar 3,150}
+
+${color1}CPU:$alignr$color$loadavg
+${color2} ${top name 1}${alignr}${top cpu 1}
+${color0} ${top name 2}${alignr}${top cpu 2}
+${color0} ${top name 3}${alignr}${top cpu 3}
+${color0} ${top name 4}${alignr}${top cpu 4}
+${color0} ${top name 5}${alignr}${top cpu 5}
+
+${color1}RAM:
+${color2} ${top_mem name 1}${alignr}${top_mem mem 1}
+${color0} ${top_mem name 2}${alignr}${top_mem mem 2}
+${color0} ${top_mem name 3}${alignr}${top_mem mem 3}
+${color0} ${top_mem name 4}${alignr}${top_mem mem 4}
+${color0} ${top_mem name 5}${alignr}${top_mem mem 5}
+
+${color1}Battery:$alignr$color${battery_percent BAT1}%
+${battery_bar 3,150 BAT1}
+${color1}UpTime:${alignr}${color0}$uptime
+
+${color1}/:$alignr${color0}${fs_used /}/${fs_size /}
+${fs_bar 3,150 /}
+#${color1}DiskIO:$color $diskio
+#${diskiograph 20,150 000000 ff7700 -t}
+
+${if_match "No Address" != "${addr eth0}"}#
+${color1}Eth0:$alignr$color${addr eth0}
+${color1}UP: ${color0}${upspeed eth0}$alignr$color${downspeed eth0}${color1} :DN
+${downspeedgraph eth0 20,70 000000 00ff00 -t}$alignr${upspeedgraph eth0 20,70 000000 ff0000 -t}
+$endif#
+${if_match "No Address" != "${addr wlan0}"}#
+${color1}Wlan0:$alignr$color${addr wlan0}
+${color1}UP: ${color0}${upspeed wlan0}$alignr$color${downspeed wlan0}${color1} :DN
+${downspeedgraph wlan0 20,70 000000 00ff00 -t}$alignr${upspeedgraph wlan0 20,70 000000 ff0000 -t}
+$color1${wireless_essid wlan0}$alignr$color${wireless_bitrate wlan0}
+${wireless_link_bar 3,150 wlan0}
+${gw_ip}
+$endif#
