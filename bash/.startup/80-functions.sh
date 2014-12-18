@@ -21,11 +21,6 @@ newbin() {
 	vim ~/bin/$1;
 }
 
-# Echo to stderr
-echoerr() {
-	cat <<< "$@" 1>&2;
-}
-
 # Wait for process
 pwait() {
 	while pgrep "$1" >/dev/null; do
@@ -33,4 +28,15 @@ pwait() {
 	done;
 	notify-send "$1 ended.";
 	echo "$1 ended.";
+}
+
+# Start SimpleHTTPServer
+www() {
+	echo http://$(ifconfig eth0 | egrep -io "inet addr:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | tr -d 'inet addr:'):8000/;
+	python -m SimpleHTTPServer;
+}
+
+# Echo to stderr
+echoerr() {
+	cat <<< "$@" 1>&2;
 }

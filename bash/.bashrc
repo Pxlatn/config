@@ -37,7 +37,7 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
 fi
 
 colors=$(tput colors)
-echo "$colors colors supported."
+#echo "$colors colors supported."
 #if (($colors >= 256)); then
 	# Terminal supports 256 colours
 	# I do not yet support more than 8...

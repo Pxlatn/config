@@ -139,6 +139,7 @@ set wildmenu			" one of the coolest things.
 if has("folding")
 	set foldmethod=syntax	" If present, the best option
 	set foldcolumn=1
+	set foldlevelstart=1
 endif
 
 " Spelling
@@ -170,3 +171,12 @@ if has("gui_running") || &t_Co >= 256
 elseif &t_Co >= 8
 	colorscheme default
 endif
+
+let javaScript_fold=1         " JavaScript
+let perl_fold=1               " Perl
+let php_folding=1             " PHP
+let r_syntax_folding=1        " R
+let ruby_fold=1               " Ruby
+let sh_fold_enabled=1         " sh
+let vimsyn_folding='af'       " Vim script
+let xml_syntax_folding=1      " XML
