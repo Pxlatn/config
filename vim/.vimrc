@@ -131,7 +131,9 @@ set cpoptions+=n		" put the 'showbreak' text in the same column as line numbers
 
 set scrolloff=5			" scroll 5 lines before edge of view.
 set cursorline			" highlight current line
-set wildmenu			" one of the coolest things.
+set wildmenu			" command line autocompletion with menu
+set splitbelow			" Split in a way more intuitive
+set splitright			" ^^^^^
 
 " Folding
 "	zc to fold
@@ -172,11 +174,11 @@ elseif &t_Co >= 8
 	colorscheme default
 endif
 
-let javaScript_fold=1         " JavaScript
-let perl_fold=1               " Perl
-let php_folding=1             " PHP
-let r_syntax_folding=1        " R
-let ruby_fold=1               " Ruby
-let sh_fold_enabled=1         " sh
-let vimsyn_folding='af'       " Vim script
-let xml_syntax_folding=1      " XML
+let javaScript_fold=1     " JavaScript
+let perl_fold=1           " Perl
+let php_folding=1         " PHP
+let r_syntax_folding=1    " R
+let ruby_fold=1           " Ruby
+let sh_fold_enabled=1     " sh
+let vimsyn_folding='af'   " Vim
+let xml_syntax_folding=1  " XML

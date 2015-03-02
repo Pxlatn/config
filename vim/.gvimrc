@@ -3,9 +3,9 @@ set hlsearch
 :nnoremap <space> <Esc>:nohlsearch<Enter>
 
 if has("gui_gnome")
-	set guifont=DejaVu\ Sans\ Mono\ 11
+	set guifont=DejaVu\ Sans\ Mono\ 9
 elseif has("gui_win32")
-    set guifont=DejaVu\ Sans\ Mono:h11
+    set guifont=DejaVu\ Sans\ Mono:h9
 	" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 	let &guioptions = substitute(&guioptions, "t", "", "g")
 endif

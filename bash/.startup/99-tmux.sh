@@ -2,12 +2,12 @@
 # This should always be run last either in .bashrc or as a script in .bashrc.d
 if [[ -n "$SSH_CLIENT" ]]; then
 	if [[ -z "$TMUX" ]]; then
-		tmux has-session &> /dev/null
+		tmux has-session -t ssh &> /dev/null
 		if [ $? -eq 1 ]; then
-			exec tmux new "cat /var/run/motd.dynamic; $SHELL -l";
+			exec tmux new-session -s ssh "cat /var/run/motd.dynamic; $SHELL -l";
 			exit;
 		else
-			exec tmux attach;
+			exec tmux attach-session -t ssh;
 			exit;
 		fi;
 	fi;
