@@ -5,9 +5,13 @@ wait() {
 
 # Convert all [0-9]{10} strings into iso-8601 format
 epoch() {
+	oform='%FT%H:%M:%S';
+	if [[ $# > 0 ]]; then
+		oform="$1";
+	fi;
 	while read line; do
 		for epoch in $(echo $line | grep -oE "[0-9]{10}"); do
-			tm=$(date +%FT%H:%M:%S -d @$epoch);
+			tm=$(date "+${oform}" -d @$epoch);
 			line=$(echo $line | sed "s/$epoch/$tm/g");
 		done;
 		echo -e $line;
