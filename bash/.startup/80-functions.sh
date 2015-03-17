@@ -18,6 +18,10 @@ epoch() {
 	done;
 }
 
+div() {
+	seq $1 | sed "s/.*/$1 \/ &/" | bc -l | sed 's/\.*00*$//' | nl | grep -v '\.'
+}
+
 # Create new file in the ~/bin/ dir
 newbin() {
 	touch ~/bin/$1;

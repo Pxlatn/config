@@ -1,6 +1,8 @@
 alias ..='cd ..'
 alias ...='cd ../..'
 alias cgrep='grep --color=always'
+alias chmod='chmod -c'
+alias chown='chown -c'
 alias cp='cp -iv'
 alias dir='dir --color=auto'
 alias egrep='egrep --color=auto'
