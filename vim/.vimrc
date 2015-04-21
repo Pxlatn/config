@@ -67,9 +67,9 @@ if has("autocmd")
 	autocmd BufNewFile,BufRead prompt_*_setup set filetype=zsh
 	autocmd BufNewFile,BufRead *.md set filetype=markdown
 	autocmd BufNewFile,BufRead *.make set filetype=make
-	autocmd BufNewFile,BufRead *.json,*.pp set foldmethod=marker
-	autocmd BufNewFile,BufRead *.json,*.pp set foldmarker={,}
-	autocmd BufNewFile,BufRead *.json,*.pp set foldlevel=5
+	autocmd BufNewFile,BufRead *.pp set foldmethod=marker
+	autocmd BufNewFile,BufRead *.pp set foldmarker={,}
+	autocmd BufNewFile,BufRead *.pp set foldlevel=5
 
 	augroup END
 else
@@ -142,6 +142,14 @@ if has("folding")
 	set foldmethod=syntax	" If present, the best option
 	set foldcolumn=1
 	set foldlevelstart=1
+	let javaScript_fold=1     " JavaScript
+	let perl_fold=1           " Perl
+	let php_folding=1         " PHP
+	let r_syntax_folding=1    " R
+	let ruby_fold=1           " Ruby
+	let sh_fold_enabled=1     " sh
+	let vimsyn_folding='af'   " Vim
+	let xml_syntax_folding=1  " XML
 endif
 
 " Spelling
@@ -149,11 +157,12 @@ endif
 "	zg to mark good
 if has("spell")
 	set spellfile=~/.vim/spell/en.utf-8.add,~/.vim/spell/de.utf-8.add
-	set spelllang=en_gb,de,sv
+	set spelllang=en_gb,de
 	runtime plugin/spellfile.vim
 	"set spell
 endif
 
+" Make j/k move through wrapped lines intuitively
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
@@ -174,11 +183,6 @@ elseif &t_Co >= 8
 	colorscheme default
 endif
 
-let javaScript_fold=1     " JavaScript
-let perl_fold=1           " Perl
-let php_folding=1         " PHP
-let r_syntax_folding=1    " R
-let ruby_fold=1           " Ruby
-let sh_fold_enabled=1     " sh
-let vimsyn_folding='af'   " Vim
-let xml_syntax_folding=1  " XML
+" http://stackoverflow.com/a/15095377
+" disable Background Colour Erase for correct rendering in terminal multiplexer
+set t_ut=

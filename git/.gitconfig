@@ -18,6 +18,7 @@
 	untracked = cyan
 [core]
 	editor = vim
+	pager = less -FRx4
 [push]
 	default = simple
 [alias]
