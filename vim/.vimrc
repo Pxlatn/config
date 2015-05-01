@@ -70,6 +70,9 @@ if has("autocmd")
 	autocmd BufNewFile,BufRead *.pp set foldmethod=marker
 	autocmd BufNewFile,BufRead *.pp set foldmarker={,}
 	autocmd BufNewFile,BufRead *.pp set foldlevel=5
+	autocmd FileType gitcommit	setlocal spell
+	autocmd FileType svn		setlocal spell
+	autocmd FileType asciidoc	setlocal spell
 
 	augroup END
 else
