@@ -111,6 +111,7 @@ if ! shopt -oq posix; then
 	fi
 fi
 
+shopt -s histappend
 export PROMPT_COMMAND='history -a'
 export PATH=$PATH:~/bin/
 

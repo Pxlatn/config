@@ -63,13 +63,13 @@ if has("autocmd")
 
 	" For all text files set 'textwidth' to 100 characters.
 "	autocmd FileType text setlocal textwidth=100
-	autocmd BufNewFile,BufRead *.zsh-theme set filetype=zsh
-	autocmd BufNewFile,BufRead prompt_*_setup set filetype=zsh
-	autocmd BufNewFile,BufRead *.md set filetype=markdown
-	autocmd BufNewFile,BufRead *.make set filetype=make
-	autocmd BufNewFile,BufRead *.pp set foldmethod=marker
-	autocmd BufNewFile,BufRead *.pp set foldmarker={,}
-	autocmd BufNewFile,BufRead *.pp set foldlevel=5
+	autocmd BufNewFile,BufRead	*.zsh-theme set filetype=zsh
+	autocmd BufNewFile,BufRead	prompt_*_setup set filetype=zsh
+	autocmd BufNewFile,BufRead	*.md set filetype=markdown
+	autocmd BufNewFile,BufRead	*.make set filetype=make
+	autocmd BufNewFile,BufRead	*.nginx set filetype=nginx
+	autocmd BufNewFile,BufRead	*.pp setlocal foldmethod=marker foldmarker={,} foldlevel=5
+	autocmd BufNewFile,BufRead	*.css,*.scss,*.less setlocal foldmethod=marker foldmarker={,}
 	autocmd FileType gitcommit	setlocal spell
 	autocmd FileType svn		setlocal spell
 	autocmd FileType asciidoc	setlocal spell
@@ -95,6 +95,14 @@ if filereadable(expand("~/.vim/bundle/vim-pathogen/autoload/pathogen.vim"))
 	endif
 endif
 
+" Syntastic options
+let g:syntastic_check_on_open=1
+let g:syntastic_enable_signs=1
+let g:syntastic_mode_map = { 'mode': 'active',
+							\ 'active_filetypes': [],
+							\ 'passive_filetypes': ['cpp','java'] }
+let g:syntastic_python_python_exec = '/usr/bin/python3'
+
 " Numbers in tabs now in .gvimrc, this is still useful though.
 set tabpagemax=1000
 
@@ -107,6 +115,8 @@ set tabstop=4
 set shiftwidth=4
 set noexpandtab
 set number
+set relativenumber
+set modeline
 
 " Status Line
 set laststatus=2

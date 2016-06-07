@@ -40,5 +40,3 @@ endfunction
 
 set guitablabel=%{GuiTabLabel()}
 set tabpagemax=1000
-
-cd ~/	" for sanity...

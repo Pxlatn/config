@@ -25,3 +25,7 @@
 # http://stackoverflow.com/a/14205847
 	graph = log --graph --full-history --all --color --pretty=format:'%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s';
 	graph-v = log --graph --full-history --all --color --pretty=format:'%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s %Cgreen(%cr) %C(bold blue)<%an>%Creset';
+[difftool "colordiff"]
+	path = /usr/bin/colordiff
+[status]
+	showUntrackedFiles = no

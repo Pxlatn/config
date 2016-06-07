@@ -22,26 +22,17 @@ div() {
 	seq $1 | sed "s/.*/$1 \/ &/" | bc -l | sed 's/\.*00*$//' | nl | grep -v '\.'
 }
 
-# Create new file in the ~/bin/ dir
-newbin() {
-	touch ~/bin/$1;
-	chmod 755 ~/bin/$1;
-	vim ~/bin/$1;
-}
-
-# Wait for process
-pwait() {
-	while pgrep "$1" >/dev/null; do
-		sleep 1s;
+mkcd() {
+	f="$1";
+	for i in `seq 1 $#`; do
+		mkdir -v "$1";
+		shift;
 	done;
-	notify-send "$1 ended.";
-	echo "$1 ended.";
+	cd "$f";
 }
 
-# Start SimpleHTTPServer
-www() {
-	echo http://$(ifconfig eth0 | egrep -io "inet addr:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | tr -d 'inet addr:'):8000/;
-	python -m SimpleHTTPServer;
+cdtmp() {
+	cd "$( mktemp -d )";
 }
 
 # Echo to stderr

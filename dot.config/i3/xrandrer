@@ -1,0 +1,36 @@
+#!/bin/bash
+
+IN="eDP1";
+position="--right-of";
+
+if [ $# -gt 0 ]; then
+	position=$1;
+fi;
+
+
+find_mode() {
+	xrandr | sed -n "/^$EXT /,/^[^ ]/p" | grep ' +' | grep -oP '\d+x\d+';
+}
+
+for EXT in HDMI1 VGA1; do
+	t=$(xrandr | grep "$EXT");
+	read ext state screen info <<< "$t";
+	ext_mode=$(find_mode $EXT);
+#	echo "{\"ext\":\"$ext\",\"state\":\"$state\",\"screen\":\"$screen\",\"info\":\"$info\",\"ext_mode\":\"$ext_mode\"}" | jq .;
+	if [ "$state" = "disconnected" ]; then
+		xrandr --output $EXT --off
+	else
+		if [ -z "$screen" ]; then
+			if [ "$ext_mode" ]; then
+				echo "Setting '$EXT' to '$ext_mode' '$position' '$IN'."
+				xrandr --output $EXT --primary --mode "$ext_mode" "$position" "$IN";
+			else
+				echo "[ERR] No ext_mode can be found";
+				notify-send "[ERR] No ext_mode can be found";
+			fi;
+		else
+			echo "Already connected $EXT with $screen $info";
+			notify-send "Already connected $EXT with $screen $info";
+		fi;
+	fi
+done;
