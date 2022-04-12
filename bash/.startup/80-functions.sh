@@ -35,6 +35,15 @@ cdtmp() {
 	cd "$( mktemp -d )";
 }
 
+# https://www.reddit.com/r/vim/comments/4nwj64/is_there_a_mix_between_vim_and_something_like_sed/d47jms8
+function vimpipe() {
+    vim - -u NONE -es '+1' "+$*" '+%print' '+:qa!' | tail -n +2
+}
+
+function vimnpipe() {
+    vim - -u NONE -es "+%normal $*" '+%print' '+:qa!' | tail -n +2
+}
+
 # Echo to stderr
 echoerr() {
 	cat <<< "$@" 1>&2;

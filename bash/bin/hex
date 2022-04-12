@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for file in "$@"
+do
+	od -A x -t x1z -v < "$file"
+done

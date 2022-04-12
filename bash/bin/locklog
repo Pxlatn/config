@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# https://people.gnome.org/~mccann/gnome-screensaver/docs/gnome-screensaver.html#gs-signals
+dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver',member='ActiveChanged'" |\
+	while read line
+	do
+		case "$line" in
+			*"boolean true"*) echo SCREEN_LOCKED ;;
+			*"boolean false"*) echo SCREEN_UNLOCKED ;;
+		esac | ts '%F %T' >> $HOME/lock_screen.log
+	done

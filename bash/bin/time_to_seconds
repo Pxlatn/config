@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+
+import fileinput
+import re
+
+
+def time_to_seconds(time_str: str) -> int:
+    try:
+        hours, minutes, seconds = re.search('^(\d+):(\d+):(\d+)$', time_str).groups()
+        time = 0
+        time += int(hours) * 3600
+        time += int(minutes) * 60
+        time += int(seconds)
+        return time
+    except:
+        return time_str
+
+
+if __name__ == '__main__':
+    for line in fileinput.input():
+        print(time_to_seconds(line.strip()))

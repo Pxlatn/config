@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+
+import fileinput
+import sys
+
+
+# Too hard-coded, but it works
+#   @returns str in form "- - 2m 1s"
+def seconds_to_time(seconds: int, print_all: bool = False) -> str:
+    printing = False
+    minutes = int(seconds / 60)
+    seconds = seconds % 60
+    hours = int(minutes / 60)
+    minutes = minutes % 60
+    days = int(hours / 24)
+    hours = hours % 24
+    output = []
+    if days > 0 or printing:
+        output.append('{}d'.format(days))
+        printing = True
+    elif print_all:
+        output.append('-')
+    if hours > 0 or printing:
+        output.append('{}h'.format(hours))
+        printing = True
+    elif print_all:
+        output.append('-')
+    if minutes > 0 or printing:
+        output.append('{}m'.format(minutes))
+        printing = True
+    elif print_all:
+        output.append('-')
+    if seconds > 0 or printing:
+        output.append('{}s'.format(seconds))
+        printing = True
+    elif print_all:
+        output.append('-')
+    if len(output) == 0:
+        output.append('0')
+    return ' '.join(output)
+
+
+if __name__ == '__main__':
+    print_all = False
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '-a' or sys.argv[1] == '--all':
+            print_all = True
+            # equiv of shift 1
+            sys.argv.remove(sys.argv[1])
+    for line in fileinput.input():
+        try:
+            seconds = round(float(line.strip()))
+            print(seconds_to_time(seconds, print_all))
+        except ValueError as e:
+            print(e, file=sys.stderr)
+            print(line)

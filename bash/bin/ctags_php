@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+dir="$(svn info --show-item wc-root || git rev-parse --git-dir)"
+[[ -d "$dir" ]] || exit
+trap 'rm -f "$dir/$$.tags"' EXIT
+cd "$dir" && ctags \
+	--tag-relative=yes \
+	--recurse \
+	-f "$$.tags" \
+	--fields=+aimlS \
+	--languages=php \
+	--PHP-kinds=+cdfint-av \
+	--exclude=composer.phar --exclude=*Test.php --exclude=*phpunit* \
+	--exclude="\.svn" --exclude="\.git"
+mv "$$.tags" "tags"

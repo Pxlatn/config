@@ -181,9 +181,10 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-" Command *find-manpage*
-" TODO: See if there is a tab-friendly version of this.
-":runtime! ftplugin/man.vim
+runtime ftplugin/man.vim
+let g:ft_man_open_mode = 'tab'
+"let g:ft_man_folding_enable = 1
+set keywordprg=:Man
 
 " Command :SQLSetType
 " TODO: See if there is a way to get this working, it seems to be disabled.

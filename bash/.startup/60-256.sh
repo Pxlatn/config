@@ -6,7 +6,8 @@
 #			export TERM="xterm-256color";
 #		fi;
 #	fi;
+
 # Just filter for the only non-256 terminal I use.
 if [[ "$TERM" != "linux" ]]; then
-	export TERM="xterm-256color";
+	export TERM="screen-256color";
 fi;

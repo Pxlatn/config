@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+import sys
+import re
+import arrow
+
+
+def delta(A: arrow, B: arrow) -> str:
+    minutes = (B - A).seconds / 60
+    ret_str = ''
+    steps = [
+        ('8', 480),
+        ('4', 240),
+        ('2', 120),
+        ('1', 60),
+        ('q', 15),
+        ('.', 5),
+    ]
+    for c, m in steps:
+        while minutes >= m:
+            ret_str += c
+            minutes -= m
+    if len(ret_str) < 4:
+        ret_str += '\t'
+    return ret_str
+
+
+prev_task = ''
+prev_time = None
+end_time  = arrow.get('1730', ['HHmm'])
+line_regex  = '^(\d+)\s+(\s*[8421Hq\.]+\s+)?(.+)$'
+line_format = '{time}\t{tally}\t{task}'
+
+for line in sys.stdin:
+    matches = re.search(line_regex, line)
+    if matches is not None:
+        time, _, task = matches.groups()
+        line_time = arrow.get(time, ['HHmm', 'HHmm'])
+
+        if prev_time is None:
+            prev_time = line_time
+        if line_time < prev_time:
+            print('# TIME ERROR')
+
+        if prev_task != '':
+            print(
+                line_format.format(
+                    time=prev_time.format('HHmm'),
+                    tally=delta(prev_time, line_time),
+                    task=prev_task
+                )
+            )
+
+        prev_task = task
+        prev_time = line_time
+    else:
+        print(line, '# parse error')
+
+if prev_time > end_time:
+    delta_str = ''
+else:
+    delta_str = delta(prev_time, end_time)
+
+print(
+    line_format.format(
+        time=prev_time.format('HHmm'),
+        tally=delta_str,
+        task=prev_task
+        )
+    )

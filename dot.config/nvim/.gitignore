@@ -1,2 +1,6 @@
 plugged/
 vim-nginx/*/
+vim-icinga2/*/
+spell/
+.netrwhist
+autoload/*

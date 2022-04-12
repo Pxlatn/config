@@ -4,8 +4,8 @@
 
 # If not running interactively, don't do anything
 case $- in
-  *i*) ;;
-	*) return;;
+	*i*) ;;
+	  *) return;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -36,73 +36,79 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
 	debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-colors=$(tput colors)
-#echo "$colors colors supported."
-#if (($colors >= 256)); then
-	# Terminal supports 256 colours
-	# I do not yet support more than 8...
-#	color_root='\[\e[38;5;9m\]'
-#	color_user='\[\e[38;5;10m\]'
-#	color_undo='\[\e[0m\]'
-#el
-if (($colors >= 8)); then
-	# Terminal supports only eight colours
-	color_undo='\[\e[0m\]'
-	exec_ret_t='\[\e[0;32m\]'
-	exec_ret_f='\[\e[0;31m\]'
-	color_root='\[\e[1;31m\]'
-	color_user='\[\e[1;34m\]'
-	color_host='\[\e[0;33m\]'
-	color_cdir='\[\e[1;36m\]'
-else
-	# Terminal may not support colour at all
-	color_undo=
-	exec_ret_t='y'
-	exec_ret_f='n'
-	color_root=
-	color_user=
-	color_host=
-	color_cdir=
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+	xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+	if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+		color_prompt=yes
+	else
+		color_prompt=
+	fi
 fi
 
-PS1="\$(ret=\$?; if [ \$ret = 0 ]; then echo -en \"${exec_ret_t}0${color_undo}\"; else echo -en \"${exec_ret_f}\${ret}${color_undo}\"; fi)";
-if ((EUID == 0)); then
-	PS1="$PS1 ${color_root}\u${color_undo}@${color_host}\h${color_undo}:${color_cdir}\$(pwd)${color_undo}\\$ ";
+if [ "$color_prompt" = yes ]; then
+	PS1='$? ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-	PS1="$PS1 ${color_user}\u${color_undo}@${color_host}\h${color_undo}:${color_cdir}\w${color_undo}\\$ ";
-fi;
-unset color_undo exec_ret_t exec_ret_f color_root color_user color_host color_cdir;
+	PS1='$? ${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
-	xterm*|rxvt*)
-		PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\H: \w\a\]$PS1"
-		;;
-	*)
-		;;
+xterm*|rxvt*)
+	PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+	;;
+*)
+	;;
 esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
 	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 	alias ls='ls --color=auto'
-	#alias dir='dir --color=auto'
-	#alias vdir='vdir --color=auto'
 
 	alias grep='grep --color=auto'
 	alias fgrep='fgrep --color=auto'
 	alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more aliases for safety and convenience
+alias ll='ls -hAlF'
+alias rm='rm -iv'
+alias mv='mv -iv'
+alias cp='cp -iv'
+alias chmod='chmod -c'
+alias chown='chown -c'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 if [ -f ~/.bash_aliases ]; then
+	# remove all aliases
+	unalias -a
 	. ~/.bash_aliases
 fi
+alias sa='alias -p > ~/.bash_aliases'
 
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
 	if [ -f /usr/share/bash-completion/bash_completion ]; then
 		. /usr/share/bash-completion/bash_completion
@@ -111,8 +117,41 @@ if ! shopt -oq posix; then
 	fi
 fi
 
-shopt -s histappend
-export PROMPT_COMMAND='history -a'
-export PATH=$PATH:~/bin/
+# Give me the next week
+if which calendar > /dev/null 2>&1
+then
+	date $'+%a %b %d\tTODAY'
+	calendar -A7
+fi
+if which rem > /dev/null 2>&1
+then
+	rem
+fi
 
-source ~/.startup/00-index.sh;
+export PROMPT_COMMAND='history -a'
+export EDITOR='vim -c "se ft=sh"'
+#export MANPAGER="nvim -Rc 'set ft=man' -"
+
+# work, even over ssh only connection
+export DISPLAY=:0
+
+mkcd(){
+	mkdir -pv "$@"
+	cd "$1"
+}
+cdtmp(){
+	cd /tmp/tmp.*/ || cd "$( mktemp -d )"
+}
+
+# tmux attach then exit
+# to bypass:
+# bash --norc -i
+if test -n "$SSH_TTY"
+then
+	if test -z "$TMUX"
+	then
+		# echo "'$SSH_TTY'"
+		tmux attach-session
+		exit
+	fi
+fi

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for n in $(seq "$@")
+do
+	date +'%F' -d "$n days"
+done
