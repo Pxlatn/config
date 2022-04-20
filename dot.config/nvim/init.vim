@@ -18,11 +18,12 @@ call plug#begin()
 	Plug 'neomake/neomake'             " linters
 	Plug 'mhinz/vim-signify'           " git diff
 	Plug 'vimwiki/vimwiki'
-	Plug 'Yggdroot/indentLine', { 'for': 'python' }  " Messes with concealcursor, breaks vimwiki
 	Plug 'norcalli/nvim-colorizer.lua' " colour highlighter
 "	Plug 'majutsushi/tagbar'
 "	Plug 'junegunn/rainbow_parentheses'
 	Plug 'fidian/hexmode'
+	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+	Plug 'junegunn/fzf.vim'
 
 	" File types
 	Plug 'StanAngeloff/php.vim', { 'for': 'php' }
@@ -31,7 +32,7 @@ call plug#begin()
 
 call plug#end()
 
-source /home/alex/.config/nvim/plugged/hexmode/plugin/hexmode.vim
+source ~/.config/nvim/plugged/hexmode/plugin/hexmode.vim
 
 let g:python_host_prog = '/usr/bin/python2'
 let g:python3_host_prog = '/usr/bin/python3'
@@ -39,12 +40,8 @@ let g:python3_host_prog = '/usr/bin/python3'
 let g:pyindent_open_paren = '&sw'
 let g:pyindent_continue = '&sw'
 
-let g:indentLine_char = '⁞'
-"let g:indentLine_char_list = ['|', '┆', '┊']
 " tagbar
 "	nmap <F8> :TagbarToggle<CR>
-
-colorscheme molokai
 
 call neomake#configure#automake('nrw')
 let g:neomake_python_exe = 'python3'
@@ -55,6 +52,31 @@ let g:markdown_fenced_languages = [ 'bash=sh', 'console=sh', 'syslog=messages', 
 let g:markdown_syntax_conceal = 1
 let g:markdown_folding = 1
 " See also: syn-include syn-region
+
+if exists('$TMUX')
+	let g:fzf_layout = { 'tmux': '-p90%,60%' }
+endif
+let g:fzf_colors = {
+	\ 'fg':      ['fg', 'Normal'],
+	\ 'bg':      ['bg', 'Normal'],
+	\ 'hl':      ['fg', 'Comment'],
+	\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+	\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+	\ 'hl+':     ['fg', 'Statement'],
+	\ 'info':    ['fg', 'PreProc'],
+	\ 'border':  ['fg', 'Ignore'],
+	\ 'prompt':  ['fg', 'Conditional'],
+	\ 'pointer': ['fg', 'Exception'],
+	\ 'marker':  ['fg', 'Keyword'],
+	\ 'spinner': ['fg', 'Label'],
+	\ 'header':  ['fg', 'Comment'] }
+command! FGF :call fzf#run(fzf#wrap({ 'source': 'git ls-files :/', 'dir': expand('%:h') }))
+
+" https://vim.fandom.com/wiki/Highlight_unwanted_spaces
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=black guibg=black
+match ExtraWhitespace /\v\s+$| +\ze\t|[^\t]\zs\t+/
+
+colorscheme molokai
 
 " UK->US keyboard help for key access
 set langmap=£#
