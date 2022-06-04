@@ -1,0 +1,14 @@
+" Remove unwanted filetypes
+let g:include_filetypes = [
+\	'cfengine',
+\	'epics',
+\	'puppet',
+\	'php',
+\]
+
+"let g:neomake_python_exe = 'python3'
+"let g:neomake_cpp_enabled_makers = ['clangtidy']
+"let g:neomake_python_enabled_makers = ['flake8']
+
+" sources all.vim from the same directory as $MYVIMRC
+execute 'source ' . fnameescape(substitute($MYVIMRC, '[^\/]\+$', '', '') . 'all.vim')
