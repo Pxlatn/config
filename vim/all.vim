@@ -3,61 +3,72 @@ set nocompatible
 "" vim-plug
 """""""""""""
 
-let data_dir = glob(has('nvim') ? stdpath('config') : '~/.vim')
-
-if empty(glob(data_dir . '/autoload/plug.vim'))
-	silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
+let g:data_dir = glob(has('nvim') ? stdpath('config') : '~/.vim')
+let plug_data_dir = g:data_dir . '/plugged'
 let g:plug_shallow = 1
 
-let plug_data_dir = data_dir . '/plugged'
-call plug#begin(plug_data_dir)
-	Plug 'junegunn/vim-plug'
-
-	" Filetypes to conditionally include
-	let incl_filetypes = {
-	\	'cfengine': 'neilhwatson/vim_cf3',
-	\	'epics':    'nickez/epics.vim',
-	\	'puppet':   'rodjek/vim-puppet',
-	\	'php':      'StanAngeloff/php.vim',
-	\}
-	if exists('g:include_filetypes')
-		for type in g:include_filetypes
-			Plug incl_filetypes[type]
-		endfor
+if !exists('g:load_plugins') || g:load_plugins
+	if empty(glob(g:data_dir . '/autoload/plug.vim'))
+		if exepath('curl') != '' && exepath('git') != ''
+			silent execute '!curl -fLo '.g:data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+			"autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+		else
+			echo 'curl/git not available, not loading plugins'
+			echo 'curl: ' exepath('curl')
+			echo 'git:  ' exepath('git')
+			let g:load_plugins = 0
+		endif
 	endif
+endif
 
-	" Filetypes to always include
-	Plug 'pedrohdz/vim-yaml-folds' " yaml
+" Re-open conditional, to allow above to set g:load_plugins to 0
+if !exists('g:load_plugins') || g:load_plugins
+	call plug#begin(plug_data_dir)
+		Plug 'junegunn/vim-plug'
 
-	" Utilities
-	Plug 'vimwiki/vimwiki'     " vimwiki
-	Plug 'vimwiki/utils', { 'dir': plug_data_dir . '/vimwiki-utils' }
-	Plug 'junegunn/fzf', { 'do': ':call fzf#install()' }
-	Plug 'preservim/tagbar'    " ctags sidebar
-	Plug 'neomake/neomake'     " linters
-	Plug 'fidian/hexmode'      " hexedit functionality using xxd
+		" Filetypes to conditionally include
+		let incl_filetypes = {
+		\	'cfengine': 'neilhwatson/vim_cf3',
+		\	'epics':    'nickez/epics.vim',
+		\	'puppet':   'rodjek/vim-puppet',
+		\	'php':      'StanAngeloff/php.vim',
+		\}
+		if exists('g:include_filetypes')
+			for type in g:include_filetypes
+				Plug incl_filetypes[type]
+			endfor
+		endif
 
-"	https://github.com/Shougo/ddc.vim
+		" Filetypes to always include
+		Plug 'pedrohdz/vim-yaml-folds' " yaml
 
-	if has('nvim') || has('patch-8.0.902')
-		Plug 'mhinz/vim-signify'   " GIT flagging
-	else
-		Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-	endif
+		" Utilities
+		Plug 'vimwiki/vimwiki'     " vimwiki
+		Plug 'vimwiki/utils', { 'dir': plug_data_dir . '/vimwiki-utils' }
+		Plug 'junegunn/fzf', { 'do': ':call fzf#install()' }
+		Plug 'preservim/tagbar'    " ctags sidebar
+		Plug 'neomake/neomake'     " linters
+		Plug 'fidian/hexmode'      " hexedit functionality using xxd
 
-	if has('nvim')
-		Plug 'norcalli/nvim-colorizer.lua' " colour highlighter
-	endif
+	"	https://github.com/Shougo/ddc.vim
 
-	" Colourschemes
-	Plug 'nanotech/jellybeans.vim'
-	Plug 'tomasr/molokai'
-	Plug 'NLKNguyen/papercolor-theme'
+		if has('nvim') || has('patch-8.0.902')
+			Plug 'mhinz/vim-signify'   " GIT flagging
+		else
+			Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+		endif
 
-call plug#end()
+		if has('nvim')
+			Plug 'norcalli/nvim-colorizer.lua' " colour highlighter
+		endif
+
+		" Colourschemes
+		Plug 'nanotech/jellybeans.vim'
+		Plug 'tomasr/molokai'
+		Plug 'NLKNguyen/papercolor-theme'
+
+	call plug#end()
+endif
 
 "" Plugin configuration
 """""""""""""""""""""""""
@@ -133,10 +144,15 @@ let g:PaperColor_Theme_Options = {
 \}
 
 " Plug: neomake
-call neomake#configure#automake('nrw')
+if exists('*neomake#configure#automake')
+	call neomake#configure#automake('nrw')
+endif
 
 " Plug: vim-signify
-let g:signify_vcs_list = [ 'svn', 'git' ]
+let g:signify_skip = { 'vcs': { 'allow': ['git', 'svn'] } }
+if has('nvim') || has('patch-8.2.3874')
+	let g:signify_number_highlight = 1
+endif
 
 
 "" Builtin configuration
@@ -171,7 +187,7 @@ endif
 
 if has("folding")
 	set foldmethod=syntax     " If present, the best option
-	set foldcolumn=2
+	set foldcolumn=1
 	set foldlevelstart=10
 	" :help syntax.txt
 	let javaScript_fold=1     " JavaScript
@@ -228,19 +244,44 @@ let w:wsm = matchadd('ExtraWhitespace', '\v\s+$| +\ze\t|[^\t]\zs\t+', -1)
 if &t_Co > 2 " if colours
 	syntax on
 	set hlsearch
-	set background=dark
-	colorscheme PaperColor
-	if exists("*ToggleBackground") == 0
-		function ToggleBackground()
-			if &background == "dark"
-				set background=light
-			else
-				set background=dark
-			endif
-		endfunction
+	if &t_Co > 64
+		set background=dark
+		colorscheme PaperColor
+		if exists("*ToggleBackground") == 0
+			function ToggleBackground()
+				if &background == "dark"
+					set background=light
+				else
+					set background=dark
+				endif
+			endfunction
+		endif
+	else
+		if exists("*ToggleBackground") == 0
+			try
+				silent colorscheme default
+				" Hack a similar functionality for low colours
+				function ToggleBackground()
+					if !exists('g:background')
+						let g:background = &background
+					endif
+					if g:background == "dark"
+						let g:background = 'light'
+						colorscheme morning
+					else
+						let g:background = 'dark'
+						colorscheme default
+					endif
+				endfunction
+			catch
+				" no default colorscheme, giving up
+			endtry
+		endif
 	endif
-	command! ToggleBackground call ToggleBackground()
-	nmap <F3> :ToggleBackground<CR>
+	if exists("*ToggleBackground")
+		command! ToggleBackground call ToggleBackground()
+		nmap <F3> :ToggleBackground<CR>
+	endif
 endif
 
 "" Keyboard mappings
@@ -267,11 +308,22 @@ nnoremap <C-W>] <C-W>g<C-]>
 " Backups:
 set nobackup
 set writebackup
-let &backupdir = data_dir . '/backup'
-let &directory = data_dir . '/backup'
+let &backupdir = g:data_dir . '/backup'
+let &directory = g:data_dir . '/backup'
+if !isdirectory(&backupdir)
+	call mkdir(&backupdir, 'p')
+endif
 
 " map UK>US for normal mode (helps with searching)
-set langmap=£#
+try
+	let s:oldlangmap = &langmap
+	set langmap+=£;#
+catch /E357/
+	" That didn't work, likely because the multicharacter "£"
+	let &langmap = s:oldlangmap
+finally
+	unlet s:oldlangmap
+endtry
 
 set number
 set ruler

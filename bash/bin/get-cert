@@ -1,0 +1,17 @@
+#!/bin/bash
+
+[[ $# -ge 1 ]] || exit 1
+
+hostname="$1"
+port=443
+[[ $# -ge 2 ]] && port="$2"
+[[ $# -ge 3 ]] && starttls=("-starttls" "$3")
+
+echo "openssl s_client --connect" "${hostname}:${port}" "${starttls[@]}"
+
+echo -n \
+| openssl s_client --connect "${hostname}:${port}" "${starttls[@]}" \
+| sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
+| openssl x509 -noout -startdate -enddate -subject -issuer
+
+# starttls:	smtp pop3 imap ftp xmpp xmpp-server irc postgres mysql lmtp nntp sieve ldap
