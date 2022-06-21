@@ -30,8 +30,8 @@ if !exists('g:load_plugins') || g:load_plugins
 		let incl_filetypes = {
 		\	'cfengine': 'neilhwatson/vim_cf3',
 		\	'epics':    'nickez/epics.vim',
-		\	'puppet':   'rodjek/vim-puppet',
 		\	'php':      'StanAngeloff/php.vim',
+		\	'puppet':   'rodjek/vim-puppet',
 		\}
 		if exists('g:include_filetypes')
 			for type in g:include_filetypes
@@ -102,9 +102,6 @@ let g:tagbar_type_vimwiki = {
 nmap <F4> :TagbarToggle<CR>
 
 " Plug: FZF
-if exists('$TMUX')
-	let g:fzf_layout = { 'tmux': '-p90%,60%' }
-endif
 " Colour FZF with colourscheme classes
 let g:fzf_colors = {
 \	'fg':      ['fg', 'Normal'],
@@ -146,6 +143,7 @@ let g:PaperColor_Theme_Options = {
 " Plug: neomake
 if exists('*neomake#configure#automake')
 	call neomake#configure#automake('nrw')
+	nmap <F8> :Neomake<CR>
 endif
 
 " Plug: vim-signify
@@ -235,10 +233,12 @@ if !exists(":DiffOrig")
 endif
 
 " https://vim.fandom.com/wiki/Highlight_unwanted_spaces
-highlight ExtraWhitespace ctermbg=darkgrey guibg=black
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgrey guibg=black
+"highlight ExtraWhitespace ctermbg=darkgrey guibg=black
+highlight link ExtraWhitespace Error
+" CursorLine
+"autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgrey guibg=black
 " trailing ws | space before tab | non-indenting tab
-let w:wsm = matchadd('ExtraWhitespace', '\v\s+$| +\ze\t|[^\t]\zs\t+', -1)
+let g:whitespace_matcher = matchadd('ExtraWhitespace', '\v\s+$| +\ze\t|[^\t]\zs\t+', -1)
 
 " Colourscheme configuration
 if &t_Co > 2 " if colours

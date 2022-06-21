@@ -2,8 +2,8 @@
 let g:include_filetypes = [
 \	'cfengine',
 \	'epics',
-\	'puppet',
 \	'php',
+\	'puppet',
 \]
 
 "let g:neomake_cpp_enabled_makers = ['clangtidy']
