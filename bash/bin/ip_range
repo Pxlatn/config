@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import sys
+import ipaddress
+
+
+def process_network(string):
+    try:
+        network = ipaddress.ip_network(string)
+        print(
+            f'{network.compressed} is',
+            f'from {network.network_address}',
+            f'to {network.broadcast_address}'
+        )
+        for test in [
+            'is_multicast',
+            'is_private',
+            'is_unspecified',
+            'is_reserved',
+            'is_loopback',
+            'is_link_local',
+        ]:
+            if getattr(network, test):
+                print(f' {test}')
+    except ValueError as val_err:
+        print(val_err)
+        print('... finding network')
+        addr, sub = string.split('/')
+        addr = ipaddress.ip_address(addr)
+        sub = int(sub)
+
+        shift = addr.max_prefixlen - sub
+        net = ipaddress.ip_address((int(addr) >> shift) << shift)
+        process_network(f'{str(net)}/{sub}')
+
+
+def main():
+    for arg in sys.argv[1:]:
+        try:
+            process_network(arg)
+        except Exception as top_err:
+            print(f'"{arg}"', type(top_err), top_err)
+
+
+if __name__ == '__main__':
+    main()

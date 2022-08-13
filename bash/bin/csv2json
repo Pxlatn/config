@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+
+import csv
+import json
+
+argp = argparse.ArgumentParser()
+argp.add_argument(
+    'input', nargs='?',
+    type=argparse.FileType(), default=sys.stdin
+)
+args = argp.parse_args()
+reader = csv.DictReader(args.input)
+for row in reader:
+    print(json.dumps(row))

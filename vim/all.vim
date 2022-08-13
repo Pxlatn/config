@@ -23,7 +23,7 @@ endif
 
 " Re-open conditional, to allow above to set g:load_plugins to 0
 if !exists('g:load_plugins') || g:load_plugins
-	call plug#begin(plug_data_dir)
+	silent! call plug#begin(plug_data_dir)
 		Plug 'junegunn/vim-plug'
 
 		" Filetypes to conditionally include
@@ -141,7 +141,7 @@ let g:PaperColor_Theme_Options = {
 \}
 
 " Plug: neomake
-if exists('*neomake#configure#automake')
+if has_key(plugs, 'neomake')
 	call neomake#configure#automake('nrw')
 	nmap <F8> :Neomake<CR>
 endif
@@ -151,6 +151,8 @@ let g:signify_skip = { 'vcs': { 'allow': ['git', 'svn'] } }
 if has('nvim') || has('patch-8.2.3874')
 	let g:signify_number_highlight = 1
 endif
+
+nmap <F10> :Hexmode<CR>
 
 
 "" Builtin configuration
@@ -289,6 +291,7 @@ endif
 
 set pastetoggle=<F2>
 nnoremap <Space> <Esc>:nohlsearch<Enter>
+nmap <F9> :setlocal wrap!<CR>
 " make some keys more intuitive
 map Q gq
 inoremap <C-U> <C-G>u<C-U>
