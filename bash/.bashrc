@@ -143,6 +143,10 @@ cdtmp(){
 	cd /tmp/tmp.*/ || cd "$( mktemp -d )"
 }
 
+pgrep-ps(){
+	ps www -p$(pgrep "$@" | xargs | tr ' ' ,)
+}
+
 # tmux attach then exit
 # to bypass:
 # bash --norc -i

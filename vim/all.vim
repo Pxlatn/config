@@ -7,6 +7,10 @@ let g:data_dir = glob(has('nvim') ? stdpath('config') : '~/.vim')
 let plug_data_dir = g:data_dir . '/plugged'
 let g:plug_shallow = 1
 
+if !exists('g:enable_linting')
+	let g:enable_linting = empty($SSH_CLIENT)
+endif
+
 if !exists('g:load_plugins') || g:load_plugins
 	if empty(glob(g:data_dir . '/autoload/plug.vim'))
 		if exepath('curl') != '' && exepath('git') != ''
@@ -30,25 +34,29 @@ if !exists('g:load_plugins') || g:load_plugins
 		let incl_filetypes = {
 		\	'cfengine': 'neilhwatson/vim_cf3',
 		\	'epics':    'nickez/epics.vim',
+		\	'logstash': 'robbles/logstash.vim',
 		\	'php':      'StanAngeloff/php.vim',
 		\	'puppet':   'rodjek/vim-puppet',
 		\}
-		if exists('g:include_filetypes')
-			for type in g:include_filetypes
-				Plug incl_filetypes[type]
-			endfor
+		if !exists('g:include_filetypes')
+			let g:include_filetypes = keys(incl_filetypes)
 		endif
+		for type in g:include_filetypes
+			Plug incl_filetypes[type]
+		endfor
 
 		" Filetypes to always include
 		Plug 'pedrohdz/vim-yaml-folds' " yaml
 
 		" Utilities
-		Plug 'vimwiki/vimwiki'     " vimwiki
+		Plug 'vimwiki/vimwiki'      " vimwiki
 		Plug 'vimwiki/utils', { 'dir': plug_data_dir . '/vimwiki-utils' }
 		Plug 'junegunn/fzf', { 'do': ':call fzf#install()' }
-		Plug 'preservim/tagbar'    " ctags sidebar
-		Plug 'neomake/neomake'     " linters
-		Plug 'fidian/hexmode'      " hexedit functionality using xxd
+		Plug 'preservim/tagbar'     " ctags sidebar
+		Plug 'neomake/neomake'      " linters
+		Plug 'fidian/hexmode'       " hexedit functionality using xxd
+		Plug 'tpope/vim-fugitive'   " git
+		Plug 'tpope/vim-unimpaired' " vim list navigation
 
 	"	https://github.com/Shougo/ddc.vim
 
@@ -76,9 +84,10 @@ endif
 " Plug: vimwiki
 let wiki = {}
 let wiki.nested_syntaxes = {'bash': 'sh'}
+let wiki.auto_tags = 1
 let g:vimwiki_list = [wiki]
 let g:vimwiki_folding = 'expr'
-let g:vimwiki_global_ext = 0
+let g:vimwiki_global_ext = 1
 let g:vimwiki_hl_headers = 1
 autocmd FileType vimwiki setlocal tabstop=2
 autocmd FileType vimwiki setlocal shiftwidth=2
@@ -142,8 +151,14 @@ let g:PaperColor_Theme_Options = {
 
 " Plug: neomake
 if has_key(plugs, 'neomake')
-	call neomake#configure#automake('nrw')
+	if g:enable_linting
+		call neomake#configure#automake('nrw')
+	else
+		call neomake#configure#automake('')
+	endif
 	nmap <F8> :Neomake<CR>
+else
+   echo 'neomake not loaded'
 endif
 
 " Plug: vim-signify
@@ -152,6 +167,7 @@ if has('nvim') || has('patch-8.2.3874')
 	let g:signify_number_highlight = 1
 endif
 
+" Plug: hexmode
 nmap <F10> :Hexmode<CR>
 
 
@@ -203,8 +219,9 @@ endif
 filetype plugin indent on
 augroup vimrcEx
 au!
-	autocmd BufNewFile,BufRead *.md   set filetype=markdown
-	autocmd BufNewFile,BufRead *.make set filetype=make
+	autocmd BufNewFile,BufRead *.md      set filetype=markdown
+	autocmd BufNewFile,BufRead *.make    set filetype=make
+	autocmd BufNewFile,BufRead *.service set filetype=systemd
 	autocmd BufNewFile,BufRead *.css,*.scss,*.less setlocal foldmethod=marker foldmarker={,}
 	autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab
 	autocmd FileType cf3,yaml setlocal tabstop=2 shiftwidth=2 expandtab

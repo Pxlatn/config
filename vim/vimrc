@@ -1,10 +1,13 @@
 " Remove unwanted filetypes
-let g:include_filetypes = [
-\	'cfengine',
-\	'epics',
-\	'php',
-\	'puppet',
-\]
+"let g:include_filetypes = [
+"\	'cfengine',
+"\	'epics',
+"\	'logstash',
+"\	'php',
+"\	'puppet',
+"\]
+
+"let g:enable_linting = empty($SSH_CLIENT)
 
 "let g:neomake_cpp_enabled_makers = ['clangtidy']
 "let g:neomake_python_exe = 'python3'
