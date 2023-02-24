@@ -131,6 +131,7 @@ fi
 export PROMPT_COMMAND='history -a'
 export EDITOR='vim -c "se ft=sh"'
 #export MANPAGER="nvim -Rc 'set ft=man' -"
+export SUDO_EDITOR=vim
 
 # work, even over ssh only connection
 export DISPLAY=:0

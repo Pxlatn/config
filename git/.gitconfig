@@ -25,6 +25,8 @@
 # http://stackoverflow.com/a/14205847
 	graph = log --graph --full-history --all --color --pretty=format:'%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s';
 	graph-v = log --graph --full-history --all --color --pretty=format:'%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s %Cgreen(%cr) %C(bold blue)<%an>%Creset';
+	get-url = remote get-url origin
+	get-branch = rev-parse --abbrev-ref HEAD
 [diff]
 	tool = vimdiff
 [difftool "vimdiff"]

@@ -3,6 +3,7 @@
 "\	'cfengine',
 "\	'epics',
 "\	'logstash',
+"\	'mustache',
 "\	'php',
 "\	'puppet',
 "\]

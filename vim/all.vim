@@ -35,6 +35,7 @@ if !exists('g:load_plugins') || g:load_plugins
 		\	'cfengine': 'neilhwatson/vim_cf3',
 		\	'epics':    'nickez/epics.vim',
 		\	'logstash': 'robbles/logstash.vim',
+		\	'mustache': 'mustache/vim-mustache-handlebars',
 		\	'php':      'StanAngeloff/php.vim',
 		\	'puppet':   'rodjek/vim-puppet',
 		\}
@@ -63,7 +64,7 @@ if !exists('g:load_plugins') || g:load_plugins
 		if has('nvim') || has('patch-8.0.902')
 			Plug 'mhinz/vim-signify'   " GIT flagging
 		else
-			Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+			Plug 'mhinz/vim-signify', { 'tag': 'legacy' }
 		endif
 
 		if has('nvim')
@@ -84,11 +85,13 @@ endif
 " Plug: vimwiki
 let wiki = {}
 let wiki.nested_syntaxes = {'bash': 'sh'}
+let wiki.auto_diary_index = 1
 let wiki.auto_tags = 1
 let g:vimwiki_list = [wiki]
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_global_ext = 1
 let g:vimwiki_hl_headers = 1
+let g:vimwiki_auto_header = 1
 autocmd FileType vimwiki setlocal tabstop=2
 autocmd FileType vimwiki setlocal shiftwidth=2
 autocmd FileType vimwiki setlocal noexpandtab
@@ -96,6 +99,13 @@ autocmd FileType vimwiki setlocal noexpandtab
 autocmd FileType vimwiki nmap <C-W><CR> <Plug>VimwikiSplitLink 0 1
 " C-S-CR doesn't seem to work, so add <Leader><CR> to open links in tab
 autocmd FileType vimwiki nmap <Leader><CR> <Plug>VimwikiTabnewLink
+
+" Error detected while processing ~/.vim/plugged/vimwiki/syntax/vimwiki.vim:
+" E410: Invalid :syntax subcommand: iskeyword
+" https://github.com/vim/vim/releases/tag/v7.4.1142
+if !has('patch-7.4.1142')
+	let g:vimwiki_emoji_enable = 0
+endif
 
 " Plug: vimwiki + tagbar
 " extend tagbar to handle vimwiki
@@ -302,6 +312,22 @@ if &t_Co > 2 " if colours
 		nmap <F3> :ToggleBackground<CR>
 	endif
 endif
+
+"" Bracketed Paste
+""""""""""""""""""""
+
+" bracketed paste -> automated paste mode
+" https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 "" Keyboard mappings
 """"""""""""""""""""""

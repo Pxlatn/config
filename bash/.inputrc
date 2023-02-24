@@ -20,6 +20,10 @@ set output-meta on
 # set bell-style none
 # set bell-style visible
 
+set colored-completion-prefix on
+set colored-stats on
+set enable-bracketed-paste on
+
 "\M-v": vi-editing-mode
 "\M-e": emacs-editing-mode
 
