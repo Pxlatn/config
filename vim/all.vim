@@ -99,6 +99,9 @@ autocmd FileType vimwiki setlocal noexpandtab
 autocmd FileType vimwiki nmap <C-W><CR> <Plug>VimwikiSplitLink 0 1
 " C-S-CR doesn't seem to work, so add <Leader><CR> to open links in tab
 autocmd FileType vimwiki nmap <Leader><CR> <Plug>VimwikiTabnewLink
+" Add vim-unimpaired style diary navigation
+autocmd FileType vimwiki nmap [d <Plug>VimwikiDiaryPrevDay
+autocmd FileType vimwiki nmap ]d <Plug>VimwikiDiaryNextDay
 
 " Error detected while processing ~/.vim/plugged/vimwiki/syntax/vimwiki.vim:
 " E410: Invalid :syntax subcommand: iskeyword
