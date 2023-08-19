@@ -1,6 +1,7 @@
 [user]
 	name = 
 	email = 
+#	signingkey = 
 [color]
 	ui = auto
 [color "branch"]
@@ -33,3 +34,7 @@
 	cmd = vim -d \"$REMOTE\" \"$LOCAL\"
 [init]
 	defaultBranch = trunk
+[commit]
+#	gpgSign = true
+[log]
+	showSignature = true
