@@ -4,6 +4,7 @@
 "\	'epics',
 "\	'logstash',
 "\	'mustache',
+"\	'nginx',
 "\	'php',
 "\	'puppet',
 "\]

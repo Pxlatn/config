@@ -36,6 +36,7 @@ if !exists('g:load_plugins') || g:load_plugins
 		\	'epics':    'nickez/epics.vim',
 		\	'logstash': 'robbles/logstash.vim',
 		\	'mustache': 'mustache/vim-mustache-handlebars',
+		\	'nginx':    'chr4/nginx.vim',
 		\	'php':      'StanAngeloff/php.vim',
 		\	'puppet':   'rodjek/vim-puppet',
 		\}
@@ -58,6 +59,8 @@ if !exists('g:load_plugins') || g:load_plugins
 		Plug 'fidian/hexmode'       " hexedit functionality using xxd
 		Plug 'tpope/vim-fugitive'   " git
 		Plug 'tpope/vim-unimpaired' " vim list navigation
+		Plug 'Konfekt/FastFold'     " Faster folding
+		Plug 'tmhedberg/SimpylFold' " Python folding
 
 	"	https://github.com/Shougo/ddc.vim
 
@@ -183,6 +186,8 @@ endif
 " Plug: hexmode
 nmap <F10> :Hexmode<CR>
 
+" Plug: SimpylFold
+let g:SimpylFold_docstring_preview = 1
 
 "" Builtin configuration
 """"""""""""""""""""""""""
@@ -219,14 +224,23 @@ if has("folding")
 	set foldcolumn=1
 	set foldlevelstart=10
 	" :help syntax.txt
-	let javaScript_fold=1     " JavaScript
-	let perl_fold=1           " Perl
-	let php_folding=1         " PHP
-	let r_syntax_folding=1    " R
-	let ruby_fold=1           " Ruby
-	let sh_fold_enabled=1     " sh
-	let vimsyn_folding='af'   " Vim
-	let xml_syntax_folding=1  " XML
+	let g:javaScript_fold=1     " JavaScript
+	let g:perl_fold=1           " Perl
+	let g:perl_fold_blocks=1
+	let g:php_folding=1         " PHP
+	let g:r_syntax_folding=1    " R
+	let g:ruby_fold=1           " Ruby
+	let g:sh_fold_enabled=7     " sh
+	let g:zsh_fold_enable=1
+	let g:vimsyn_folding='af'   " Vim
+	let g:xml_syntax_folding=1  " XML
+	let g:markdown_folding=1    " MarkDown
+	let g:tex_fold_enabled=1
+	let g:rust_fold=1           " Rust
+	let g:rst_fold_enabled=1
+	let g:fortran_fold=1
+	let g:clojure_fold=1
+	let g:baan_fold=1
 endif
 
 filetype plugin indent on
@@ -350,6 +364,9 @@ nnoremap gk k
 " Better Tag navigation with :tjump
 nnoremap <C-]> g<C-]>
 nnoremap <C-W>] <C-W>g<C-]>
+
+dig ?! 8253 " ‽
+dig !? 8253 " ‽
 
 "" General Settings
 """""""""""""""""""""
